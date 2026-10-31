@@ -1,0 +1,34 @@
+ANOTHERWORLD 0.1.12 - lecteur natif du moteur Another World pour ESP32-S3 (carte ESP32-CoCo3-PRO)
+=========================================================================================
+Luc Dion 31-10-2026 - licence MIT (voir LICENSE). Documentation complète en anglais : README.md
+
+Moteur réécrit (bytecode, polygones, mixeur 4 voies, musique). Aucune donnée du jeu n'est incluse.
+
+CARTE SD
+  Dossier /AW à la racine, contenant :
+    MEMLIST.BIN            table des ressources
+    BANK01 ... BANK0D      banques du jeu (BANK05 absente sur les disquettes Amiga : écran de protection)
+    STRINGS.TXT            textes du jeu, une ligne « id=texte » (id hexadécimal, \n = saut de ligne).
+                           Version Amiga : extraits de l'exécutable « another » (table à 0x2E4C, 121 textes).
+  Version DOS : copier MEMLIST.BIN et BANKxx tels quels.
+  Version Amiga (2 disquettes ADF) : les fichiers bankXX sont sur les disquettes ; MEMLIST.BIN n'existe pas
+  et a été extrait de l'exécutable « another » (table de 146 entrées à la position 0x5E5A, version
+  Delphine + U.S. Gold). Scripts de préparation dans tools/ (voir README.md)
+
+TOUCHES (clavier USB)
+  Flèches = déplacement     Espace / Entrée / Ctrl = action     P = pause     C = code d'accès
+  F2 = couleurs checker frc/checker/bayer 4x4/oklab/oklab nearest/raw   F3 = son coupé     F4 = interpolation du son (défaut : sans, comme l'Amiga)
+  F5..F11 = parties 16001..16007      - et = = luminosité (gamma)      [ et ] = longueur de ligne VGA (barres verticales sur écran LCD)
+  Port série COM5 (921600) : w a s d, espace, p, c, x (couleurs), m (son), i (interpolation), - = (luminosité), 1..7 (parties),
+  g (vidage des 4 pages + palette, diagnostic), t (trace des textes)
+
+MATÉRIEL
+  VGA 6 bits (2 bits par couleur), 480 lignes réelles (chaque ligne du jeu sur 2 lignes VGA, tramées séparément) : les palettes 12 bits du jeu sont réduites à 64 couleurs. Par défaut, damier
+  alterné à chaque image (60 Hz, comme le FRC des dalles LCD) : teinte moyenne juste sans motif fixe. Sinon tramage
+  par composante en lumière linéaire réduit au damier 50 % (teintes fidèles, texture la plus fine, couleurs proches
+  d'un niveau VGA unies) ; F2 bascule vers le tramage 4x4 complet (plus juste, plus visible), OKLab (couleur seule ou damier de deux couleurs), OKLab sans damier, ou arrondi simple.
+  Son I2S PDM 48 kHz : mono sur GPIO 47 par défaut (circuit de test : voie droite non câblée) ; stéréo GPIO 47 (G)
+  + 12 (D) avec AW_AUDIO_STEREO 1 dans aw_config.h. Carte SD en mode 1 bit (GPIO 38/39/40).
+
+À FAIRE
+  Manette USB, textes du jeu, intégration au menu F12 du CoCo3-PRO.
